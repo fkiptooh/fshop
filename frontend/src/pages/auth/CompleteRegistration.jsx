@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { auth} from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 export const CompleteRegistration = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     setEmail(window.localStorage.getItem("emailForRegistration"));
@@ -12,6 +14,17 @@ export const CompleteRegistration = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Validation Checks
+    if (!email || !password) {
+        toast.error("Email and Password Required!");
+        return;
+    }
+
+    if (password.length < 6) {
+        toast.error("Password length needs to be more than 6 characters");
+        return;
+    }
+
     try {
         const result = await auth.signInWithEmailLink(email, window.location.href);
 
@@ -21,6 +34,11 @@ export const CompleteRegistration = () => {
             let user = auth.currentUser;
 
             await user.updatePassword(password)
+
+            // const idTokenResult = await user.getIdTokenResult();
+
+            // console.log("user", user, "idTokenResult", idTokenResult);
+            navigate("/")
             
         }
     } catch (error) {

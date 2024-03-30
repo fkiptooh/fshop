@@ -23,17 +23,25 @@ export const Header = () => {
 
   const onClick = (e) => {
     console.log("click ", e);
-    if (e.key === "home") {
-      navigate("/");
-    } if (e.key === "login") {
-      navigate("/login");
-    } if (e.key === "/register") {
-      navigate("/register");
-    } else {
-        navigate(`/${e.key}`);
+    setCurrent(e.key); // Always set current key first
+    switch (e.key) {
+      case "home":
+        navigate("/");
+        break;
+      case "register":
+        navigate("/register");
+        break;
+      case "login":
+        navigate("/login");
+        break;
+      case "logout":
+        navigate("/logout");
+        break;
+      default:
+        break;
     }
-    setCurrent(e.key);
   };
+
   return (
     <>
       <StyledMenu>

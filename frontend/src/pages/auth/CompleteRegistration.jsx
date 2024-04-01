@@ -35,9 +35,9 @@ export const CompleteRegistration = () => {
 
             await user.updatePassword(password)
 
-            // const idTokenResult = await user.getIdTokenResult();
+            const idTokenResult = await user.getIdTokenResult();
 
-            // console.log("user", user, "idTokenResult", idTokenResult);
+            console.log("user", user, "idTokenResult", idTokenResult);
             navigate("/")
             
         }

@@ -1,13 +1,17 @@
 import { useState } from "react";
 import {
   AppstoreOutlined,
+  DashboardFilled,
   LogoutOutlined,
+  SettingOutlined,
   UserAddOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import firebase from "firebase/compat/app";
+import { useDispatch } from "react-redux";
 
 const StyledMenu = styled.header`
   display: flex;
@@ -20,10 +24,11 @@ const showShowLoginAndRgister = true;
 export const Header = () => {
   const [current, setCurrent] = useState("home");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const onClick = (e) => {
     console.log("click ", e);
-    setCurrent(e.key); // Always set current key first
+    setCurrent(e.key);
     switch (e.key) {
       case "home":
         navigate("/");
@@ -36,6 +41,12 @@ export const Header = () => {
         break;
       case "logout":
         navigate("/logout");
+        firebase.auth().signOut();
+        dispatch({
+          type: "LOGOUT",
+          payload: null 
+        })
+        navigate("/login")
         break;
       default:
         break;
@@ -55,6 +66,23 @@ export const Header = () => {
               label: "Home",
               key: "home",
               icon: <AppstoreOutlined />,
+            },
+            {
+              label: "Username",
+              key: "Submenu",
+              icon: <SettingOutlined />,
+              children: [
+                {
+                  label: "Dashboard",
+                  key: "dashboard",
+                  icon: <DashboardFilled/>
+                },
+                {
+                  label: "Logout",
+                  key: "logout",
+                  icon: <LogoutOutlined/>
+                }
+              ]
             },
           ]}
         />

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "antd";
-import { MailOutlined } from "@ant-design/icons";
-import { auth } from "../../firebase";
+import { GoogleOutlined, MailOutlined } from "@ant-design/icons";
+import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +36,25 @@ export const Login = () => {
       toast.error(error.message);
     }
   };
+
+  // google signin
+  const gooogleAuth = async() => {
+    auth.signInWithPopup(googleAuthProvider)
+    .then( async (response) => {
+      const { user } = response;
+      const idToken = await user.getIdTokenResult();
+      dispatch({
+        type: "LOGGED_IN_USER",
+        payload: {
+          username: user.displayName,
+          token: idToken.token
+        }
+      });
+      navigate("/");
+    })
+    .catch((error) => toast.error(error.message));
+  }
+
   const loginForm = () => (
     <form>
       <div className="form-group">
@@ -66,9 +85,23 @@ export const Login = () => {
         block
         shape="round"
         icon={<MailOutlined />}
+        size="large"
         disabled={!email && password.length < 6 && loading}
       >
         Login With Email/Password
+      </Button>
+      <br/>
+      <Button
+        onClick={gooogleAuth}
+        type="primary"
+        className="mb-3"
+        block
+        shape="round"
+        icon={<GoogleOutlined />}
+        size="large"
+        danger
+      >
+        Login with Google
       </Button>
     </form>
   );

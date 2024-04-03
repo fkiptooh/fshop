@@ -11,7 +11,7 @@ import { Menu } from "antd";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import firebase from "firebase/compat/app";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const StyledMenu = styled.header`
   display: flex;
@@ -19,12 +19,14 @@ const StyledMenu = styled.header`
   justify-content: space-between;
 `;
 
-const showShowLoginAndRgister = true;
 
 export const Header = () => {
   const [current, setCurrent] = useState("home");
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  let user = useSelector((state) => ({...state}));
+  
+  const showShowLoginAndRgister = !user.user;
 
   const onClick = (e) => {
     console.log("click ", e);
@@ -67,23 +69,6 @@ export const Header = () => {
               key: "home",
               icon: <AppstoreOutlined />,
             },
-            {
-              label: "Username",
-              key: "Submenu",
-              icon: <SettingOutlined />,
-              children: [
-                {
-                  label: "Dashboard",
-                  key: "dashboard",
-                  icon: <DashboardFilled/>
-                },
-                {
-                  label: "Logout",
-                  key: "logout",
-                  icon: <LogoutOutlined/>
-                }
-              ]
-            },
           ]}
         />
         {showShowLoginAndRgister ? (
@@ -110,11 +95,24 @@ export const Header = () => {
             selectedKeys={[current]}
             mode="horizontal"
             onClick={onClick}
+            style={{ display: "flex", flex: 1, justifyContent: "flex-end" }}
             items={[
               {
-                label: "Logout",
-                key: "logout",
-                icon: <LogoutOutlined />,
+                label: <span>{(user.user.email && user.user.email.split("@")[0]) || (user.user.username && user.user.username)}</span>,
+                key: "Submenu",
+                icon: <SettingOutlined />,
+                children: [
+                  {
+                    label: "Dashboard",
+                    key: "dashboard",
+                    icon: <DashboardFilled/>
+                  },
+                  {
+                    label: "Logout",
+                    key: "logout",
+                    icon: <LogoutOutlined/>
+                  }
+                ]
               },
             ]}
           />

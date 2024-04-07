@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { CompleteRegistration, Home, Login, Register } from "./pages";
+import { CompleteRegistration, Home, Login, Register, ForgotPassword } from "./pages";
 import { Header } from "./components";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -34,6 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/complete" element={<CompleteRegistration/>} />
+        <Route path="/forgot/password" element={<ForgotPassword/>} />
       </Routes>
     </>
   );

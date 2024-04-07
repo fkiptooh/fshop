@@ -4,7 +4,7 @@ import { GoogleOutlined, MailOutlined } from "@ant-design/icons";
 import { auth, googleAuthProvider } from "../../firebase";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Login = () => {
   // state
@@ -27,10 +27,10 @@ export const Login = () => {
         type: "LOGGED_IN_USER",
         payload: {
           username: user.email,
-          token: idToken.token
-        }
-      })
-      navigate("/")
+          token: idToken.token,
+        },
+      });
+      navigate("/");
     } catch (error) {
       setLoading(false);
       toast.error(error.message);
@@ -38,22 +38,23 @@ export const Login = () => {
   };
 
   // google signin
-  const gooogleAuth = async() => {
-    auth.signInWithPopup(googleAuthProvider)
-    .then( async (response) => {
-      const { user } = response;
-      const idToken = await user.getIdTokenResult();
-      dispatch({
-        type: "LOGGED_IN_USER",
-        payload: {
-          username: user.displayName,
-          token: idToken.token
-        }
-      });
-      navigate("/");
-    })
-    .catch((error) => toast.error(error.message));
-  }
+  const gooogleAuth = async () => {
+    auth
+      .signInWithPopup(googleAuthProvider)
+      .then(async (response) => {
+        const { user } = response;
+        const idToken = await user.getIdTokenResult();
+        dispatch({
+          type: "LOGGED_IN_USER",
+          payload: {
+            username: user.displayName,
+            token: idToken.token,
+          },
+        });
+        navigate("/");
+      })
+      .catch((error) => toast.error(error.message));
+  };
 
   const loginForm = () => (
     <form>
@@ -90,19 +91,6 @@ export const Login = () => {
       >
         Login With Email/Password
       </Button>
-      <br/>
-      <Button
-        onClick={gooogleAuth}
-        type="primary"
-        className="mb-3"
-        block
-        shape="round"
-        icon={<GoogleOutlined />}
-        size="large"
-        danger
-      >
-        Login with Google
-      </Button>
     </form>
   );
   return (
@@ -111,6 +99,21 @@ export const Login = () => {
         <div className="col-md-6 offset-md-3">
           <h4>Login</h4>
           {loginForm()}
+          <Button
+            onClick={gooogleAuth}
+            type="primary"
+            className="mb-3"
+            block
+            shape="round"
+            icon={<GoogleOutlined />}
+            size="large"
+            danger
+          >
+            Login with Google
+          </Button>
+          <Link to="/forgot/password" className="float-right text-danger">
+            Forgot Password
+          </Link>
         </div>
       </div>
     </div>
